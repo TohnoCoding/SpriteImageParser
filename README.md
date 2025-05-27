@@ -1,6 +1,6 @@
 # SpriteImageParser (SIP)
 
-**SpriteImageParser_Core** is a lightweight C# library for detecting sprite regions in raster images (e.g., PNGs, GIFs). It takes a 2D array of pixels, analyzes connected non-transparent regions, and returns bounding boxes for each detected sprite. Excellent examples of the type of spritesheets expected by this tool can be found on [Sprites INC.](https://sprites-inc.co.uk/), a repository of sprite data focused on the MegaMan series of games. (Disclaimer: TohnoCoding has no relation to Sprites INC. other than acknowledging their work is awesome.)
+**SpriteImageParser** is a lightweight C# library for detecting sprite regions in raster images (e.g., PNGs, GIFs). It takes a 2D array of pixels, analyzes connected non-transparent regions, and returns bounding boxes for each detected sprite. Excellent examples of the type of spritesheets expected by this tool can be found on [Sprites INC.](https://sprites-inc.co.uk/), a repository of sprite data focused on the MegaMan series of games. (Disclaimer: TohnoCoding has no relation to Sprites INC. other than acknowledging their work is awesome.)
 
 This tool is designed to be part of an asset pipeline or editor — it does not read or write image files directly. It follows a simple "one job, one tool" philosophy.
 
