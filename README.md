@@ -8,7 +8,7 @@ If you're building a game development tool, editor or jam project in MonoGame or
 
 You can see a sample Windows-based implementation in [this discussion](https://github.com/TohnoCoding/SpriteImageParser/discussions/1).
 
-#### TL;DR
+### TL;DR
 A small, self-contained library to detect and extract sprite regions from raster images — useful for pipelines, prototyping, or editor tools. Code samples in this README file, and in the linked discussion above.
 
 ---
