@@ -42,6 +42,13 @@ namespace SpriteImageParser.Core
         }
 
         /// <summary>
+        /// Serializes a list of sprite regions to a JSON string with a default frame name and duration.
+        /// </summary>
+        /// <param name="regions">The list of sprite regions to serialize.</param>
+        /// <returns>A JSON string representing the sprite regions provided.</returns>
+        public static string SerializeToJson(List<SpriteRegion> regions) => SerializeToJson(regions, "Frame", 1);
+
+        /// <summary>
         /// Serializes a list of sprite regions to an XML string.
         /// </summary>
         /// <param name="regions">The list of sprite regions to serialize.</param>
@@ -75,5 +82,12 @@ namespace SpriteImageParser.Core
             }
             return doc.OuterXml;
         }
+
+        /// <summary>
+        /// Serializes a list of sprite regions to an XML string with a default frame name and duration.
+        /// </summary>
+        /// <param name="regions">The list of sprite regions to serialize.</param>
+        /// <returns>An XML string representing the sprite regions provided.</returns>
+        public static string SerializeToXml(List<SpriteRegion> regions) => SerializeToXml(regions, "Frame", 1);
     }
 }
