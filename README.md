@@ -67,6 +67,7 @@ Detected regions are serialized into this format:
 <Spritesheet>
 	<SpriteRegion>
 		<Name>Sprite000001</Name>
+		<Duration>1000</Duration>
 		<Frame>
 			<X>194</X>
 			<Y>4</Y>
@@ -76,6 +77,7 @@ Detected regions are serialized into this format:
 	</SpriteRegion>
 	<SpriteRegion>
 		<Name>Sprite000001</Name>
+		<Duration>1000</Duration>
 		<Frame>
 			<X>244</X>
 			<Y>4</Y>
