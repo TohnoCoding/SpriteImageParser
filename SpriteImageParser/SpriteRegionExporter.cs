@@ -1,4 +1,6 @@
 ﻿#pragma warning disable // CS8602 is being unnecessarily annoying in the XML builder
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Xml;
 
@@ -80,7 +82,7 @@ namespace SpriteImageParser.Core
                 root.AppendChild(regionElement);
                 counter++;
             }
-            return doc.OuterXml;
+            return Beautify(doc);
         }
 
         /// <summary>
@@ -89,5 +91,25 @@ namespace SpriteImageParser.Core
         /// <param name="regions">The list of sprite regions to serialize.</param>
         /// <returns>An XML string representing the sprite regions provided.</returns>
         public static string SerializeToXml(List<SpriteRegion> regions) => SerializeToXml(regions, "Frame", 1);
+
+        /// <summary>
+        /// Beautifies an XML document by formatting it with indentation and new lines.
+        /// </summary>
+        /// <param name="doc">The XML document to beautify.</param>
+        /// <returns>A string representation of the XML document with beautified indentation.</returns>
+        static private string Beautify(XmlDocument doc)
+        {
+            StringBuilder sb = new();
+            XmlWriterSettings settings = new()
+            {
+                Indent = true,
+                NewLineHandling = NewLineHandling.Replace,
+                NewLineChars = "\r\n",
+                IndentChars = "    "
+            };
+            using (XmlWriter writer = XmlWriter.Create(sb, settings))
+            { doc.Save(writer); }
+            return sb.ToString();
+        }
     }
 }
