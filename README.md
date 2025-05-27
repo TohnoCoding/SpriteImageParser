@@ -4,6 +4,13 @@
 
 This tool is designed to be part of an asset pipeline or editor — it does not read or write image files directly. It follows a simple "one job, one tool" philosophy.
 
+If you're building a game development tool, editor or jam project in MonoGame or any other 2D-compatible platform, and need to break spritesheets into spritemaps without creating them by hand, this may be able to save you some time.
+
+You can see a sample Windows-based implementation in [this discussion](https://github.com/TohnoCoding/SpriteImageParser/discussions/1).
+
+#### TL;DR
+A small, self-contained library to detect and extract sprite regions from raster images — useful for pipelines, prototyping, or editor tools. Code samples in this README file, and in the linked discussion above.
+
 ---
 ## 🧩 Features
 - Detects sprite regions based on alpha/transparency
