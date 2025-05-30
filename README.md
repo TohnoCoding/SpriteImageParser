@@ -97,8 +97,8 @@ Detected regions are serialized into this format:
 ---
 ## ⚙️ API Overview
 
-#### `Parser.DetectSpritesInImage(Pixel[,] pixels, byte tolerance = 0)`
--   **Input**: A 2D array of `Pixel` structs (RGBA).
+#### `Parser.DetectSpritesInImage(Pixel[,] pixels, int yTolerance, Pixel? transparencyMask)`
+-   **Input**: A 2D array of `Pixel` structs (RGBA), and a Y-axis margin value to consider sprites part of the same "horizontal group".
 -   **Output**: A `List<SpriteRegion>` with detected bounding rectangles.
     
 
