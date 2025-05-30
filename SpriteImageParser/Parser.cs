@@ -9,11 +9,16 @@
         /// Detects sprite regions in a given image represented as a 2D array of pixels.
         /// </summary>
         /// <param name="image">The 2D array of pixels to detect sprites in.</param>
+        /// <param name="yTolerance">The variance in the Y axis to account for when grouping
+        /// sprites together in a single row. (Plus/Minus N amount of pixels.)</param>
         /// <param name="transparencyMask">Optional; if provided, this pixel value will be taken
         /// as the transparency color for non-transparent images.</param>
         /// <returns>A list of <see cref="SpriteRegion"/>s with the locations and dimensions
         /// of all sprites found in the image.</returns>
-        public static List<SpriteRegion> DetectSpritesInImage(Pixel[,] image, Pixel? transparencyMask = null)
+        public static List<SpriteRegion> DetectSpritesInImage(
+            Pixel[,] image,
+            int yTolerance = 3,
+            Pixel? transparencyMask = null)
         {
             var detectedSprites = new List<SpriteRegion>(); // return value
             int width = image.GetLength(0);
@@ -40,8 +45,74 @@
                     else { visited[x, y] = true; }
                 }
             }
-            return detectedSprites.OrderBy(r => r.Y).ThenBy(r => r.X).ToList();
+            detectedSprites = [.. detectedSprites.OrderBy(r => r.Y).ThenBy(r => r.X)];
+
+            var groupedRows = GroupByRow(detectedSprites, yTolerance);
+
+            NormalizeSpriteRows(groupedRows);
+
+            return [.. groupedRows.SelectMany(row => row).OrderBy(r => r.Y).ThenBy(r => r.X)];
         }
+
+
+        /// <summary>
+        /// Groups sprite regions by their Y coordinate, allowing for a specified tolerance.
+        /// </summary>
+        /// <param name="regions">The full list of detected sprite regions in an image.</param>
+        /// <param name="yTolerance">The Y-axis potential variance to account for when grouping
+        /// sprite groups.</param>
+        /// <returns>A matrix of lists of <see cref="SpriteRegion"/> representing each row of
+        /// sprites.</returns>
+        private static List<List<SpriteRegion>> GroupByRow(List<SpriteRegion> regions, int yTolerance)
+        {
+            var rows = new List<List<SpriteRegion>>();
+            foreach (var region in regions)
+            {
+                bool added = false;
+                foreach (var row in rows)
+                {
+                    // Instead of comparing to just row[0], compare to all regions in the row
+                    if (row.Any(r => Math.Abs(r.Y - region.Y) <= yTolerance))
+                    {
+                        row.Add(region);
+                        added = true;
+                        break;
+                    }
+                }
+                if (!added) { rows.Add([region]); }
+            }
+            return rows;
+        }
+
+
+        /// <summary>
+        /// Normalizes the sprite regions in each row to have the same width and height, based
+        /// on the dimensions of the largest sprite in the row.
+        /// </summary>
+        /// <param name="groupedRows">The list of sprite rows (represented as lists of
+        /// <see cref="SpriteRegion"/>) that forms the spritesheet.</param>
+        private static void NormalizeSpriteRows(List<List<SpriteRegion>> groupedRows)
+        {
+            foreach (var row in groupedRows)
+            {
+                int maxWidth = row.Max(r => r.Width);
+                int maxHeight = row.Max(r => r.Height);
+                int maxBottom = row.Max(r => r.Y + r.Height);
+                for (int i = 0; i < row.Count; i++)
+                {
+                    var sprite = row[i];
+                    int newY = maxBottom - maxHeight;
+                    int yOffset = sprite.Y - newY;
+                    int xOffset = (maxWidth - sprite.Width) / 2;
+                    sprite.Y -= yOffset; // move up or down to align bottom
+                    sprite.X -= xOffset; // move left or right to center
+                    sprite.Width = maxWidth;
+                    sprite.Height = maxHeight;
+                    row[i] = sprite; // reassign the modified struct
+                }
+            }
+        }
+
 
         /// <summary>
         /// Performs a flood fill algorithm to find the bounding box of a sprite region.
@@ -92,12 +163,12 @@
             }
             return new SpriteRegion
             {
-                X = minX,
-                Y = minY,
+                X = minX,   Y = minY,
                 Width = maxX - minX + 1,
                 Height = maxY - minY + 1
             };
         }
+
 
         /// <summary>
         /// Gets the neighboring pixels of a given pixel in an image.
