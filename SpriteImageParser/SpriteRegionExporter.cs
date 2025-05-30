@@ -18,27 +18,34 @@ namespace SpriteImageParser.Core
         /// <param name="frameName">The name of the frame to use in the JSON output.</param>
         /// <param name="duration">Optional; the duration for each sprite frame, if applicable.</param>
         /// <returns>A JSON string representing the sprite regions provided.</returns>
-        public static string SerializeToJson(List<SpriteRegion> regions, string frameName, float? duration)
+        public static string SerializeToJson(List<SpriteRegion> regions,
+            string frameName, 
+            float? duration, 
+            int yTolerance = 3)
         {
             var output = new List<Dictionary<string, object>>();
-            int counter = 1;
-            foreach (var region in regions)
+            var grouped = Parser.GroupByRow(regions, yTolerance);
+            for (int rowIndex = 0; rowIndex < grouped.Count; rowIndex++)
             {
-                var regionData = new Dictionary<string, object>
+                var row = grouped[rowIndex];
+                for (int spriteIndex = 0; spriteIndex < row.Count; spriteIndex++)
                 {
-                    { "Name", "Sprite" + counter.ToString("D6") },
-                    { frameName, new Dictionary<string, int>
-                        {
-                            { "X", region.X },
-                            { "Y", region.Y },
-                            { "Width", region.Width },
-                            { "Height", region.Height }
-                        }
-                    },
-                    { "Duration", duration.HasValue ? duration.Value : 1 }
-                };
-                output.Add(regionData);
-                counter++;
+                    var region = row[spriteIndex];
+                    var regionData = new Dictionary<string, object>
+                    {
+                        { "Name", $"Row{rowIndex + 1:D6}Sprite{spriteIndex + 1:D6}" },
+                        { frameName, new Dictionary<string, int>
+                            {
+                                { "X", region.X },
+                                { "Y", region.Y },
+                                { "Width", region.Width },
+                                { "Height", region.Height }
+                            }
+                        },
+                        { "Duration", duration.HasValue ? duration.Value : 1 }
+                    };
+                    output.Add(regionData);
+                }
             }
             return JsonSerializer.Serialize(output, new JsonSerializerOptions { WriteIndented = true });
         }
@@ -48,7 +55,8 @@ namespace SpriteImageParser.Core
         /// </summary>
         /// <param name="regions">The list of sprite regions to serialize.</param>
         /// <returns>A JSON string representing the sprite regions provided.</returns>
-        public static string SerializeToJson(List<SpriteRegion> regions) => SerializeToJson(regions, "Frame", 1);
+        public static string SerializeToJson(List<SpriteRegion> regions)
+            => SerializeToJson(regions, "Frame", 1);
 
         /// <summary>
         /// Serializes a list of sprite regions to an XML string.
@@ -57,30 +65,39 @@ namespace SpriteImageParser.Core
         /// <param name="frameName">The name of the frame to use in the JSON output.</param>
         /// <param name="duration">Optional; the duration for each sprite frame, if applicable.</param>
         /// <returns>An XML string representing the sprite regions provided.</returns>
-        public static string SerializeToXml(List<SpriteRegion> regions, string frameName, float? duration)
+        public static string SerializeToXml(
+            List<SpriteRegion> regions,
+            string frameName,
+            float? duration,
+            int yTolerance = 3)
         {
             XmlDocument doc = new XmlDocument();
             XmlElement root = doc.CreateElement("Spritesheet");
             doc.AppendChild(root);
-            int counter = 1;
-            foreach (var region in regions)
+            var grouped = Parser.GroupByRow(regions, yTolerance);
+            for (int rowIndex = 0; rowIndex < grouped.Count; rowIndex++)
             {
-                XmlElement regionElement = doc.CreateElement("SpriteRegion");
-                regionElement.AppendChild(doc.CreateElement("Name")).InnerText =
-                    "Sprite" + counter.ToString("D6");
-                regionElement.AppendChild(doc.CreateElement(frameName));
-                regionElement.ChildNodes[regionElement.ChildNodes.Count - 1]
-                    .AppendChild(doc.CreateElement("X")).InnerText = region.X.ToString();
-                regionElement.ChildNodes[regionElement.ChildNodes.Count - 1]
-                    .AppendChild(doc.CreateElement("Y")).InnerText = region.Y.ToString();
-                regionElement.ChildNodes[regionElement.ChildNodes.Count - 1]
-                    .AppendChild(doc.CreateElement("Width")).InnerText = region.Width.ToString();
-                regionElement.ChildNodes[regionElement.ChildNodes.Count - 1]
-                    .AppendChild(doc.CreateElement("Height")).InnerText = region.Height.ToString();
-                regionElement.AppendChild(doc.CreateElement("Duration")).InnerText =
-                    duration.HasValue ? duration.Value.ToString() : "1";
-                root.AppendChild(regionElement);
-                counter++;
+                var row = grouped[rowIndex];
+                for (int spriteIndex = 0; spriteIndex < row.Count; spriteIndex++)
+                {
+                    var region = row[spriteIndex];
+                    XmlElement regionElement = doc.CreateElement("SpriteRegion");
+                    regionElement.AppendChild(doc.CreateElement("Name")).InnerText =
+                        $"Row{rowIndex + 1:D6}Sprite{spriteIndex + 1:D6}";
+                    XmlElement frameElement = doc.CreateElement(frameName);
+                    frameElement.AppendChild(doc.CreateElement("X"))
+                        .InnerText = region.X.ToString();
+                    frameElement.AppendChild(doc.CreateElement("Y"))
+                        .InnerText = region.Y.ToString();
+                    frameElement.AppendChild(doc.CreateElement("Width"))
+                        .InnerText = region.Width.ToString();
+                    frameElement.AppendChild(doc.CreateElement("Height"))
+                        .InnerText = region.Height.ToString();
+                    regionElement.AppendChild(frameElement);
+                    regionElement.AppendChild(doc.CreateElement("Duration")).InnerText =
+                        duration.HasValue ? duration.Value.ToString() : "1";
+                    root.AppendChild(regionElement);
+                }
             }
             return Beautify(doc);
         }
@@ -90,7 +107,8 @@ namespace SpriteImageParser.Core
         /// </summary>
         /// <param name="regions">The list of sprite regions to serialize.</param>
         /// <returns>An XML string representing the sprite regions provided.</returns>
-        public static string SerializeToXml(List<SpriteRegion> regions) => SerializeToXml(regions, "Frame", 1);
+        public static string SerializeToXml(List<SpriteRegion> regions)
+            => SerializeToXml(regions, "Frame", 1);
 
         /// <summary>
         /// Beautifies an XML document by formatting it with indentation and new lines.

@@ -63,7 +63,7 @@
         /// sprite groups.</param>
         /// <returns>A matrix of lists of <see cref="SpriteRegion"/> representing each row of
         /// sprites.</returns>
-        private static List<List<SpriteRegion>> GroupByRow(List<SpriteRegion> regions, int yTolerance)
+        internal static List<List<SpriteRegion>> GroupByRow(List<SpriteRegion> regions, int yTolerance)
         {
             var rows = new List<List<SpriteRegion>>();
             foreach (var region in regions)
