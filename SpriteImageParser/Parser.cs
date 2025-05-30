@@ -51,7 +51,7 @@
 
             NormalizeSpriteRows(groupedRows);
 
-            return [.. groupedRows.SelectMany(row => row)];
+            return [.. groupedRows.SelectMany(row => row).OrderBy(r => r.Y).ThenBy(r => r.X)];
         }
 
 
