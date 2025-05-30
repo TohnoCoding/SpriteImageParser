@@ -2,14 +2,14 @@
 
 **SpriteImageParser** is a lightweight C# library for detecting sprite regions in raster images (e.g., PNGs, GIFs). It takes a 2D array of pixels, analyzes connected non-transparent regions, and returns bounding boxes for each detected sprite. Excellent examples of the type of spritesheets expected by this tool can be found on [Sprites INC.](https://sprites-inc.co.uk/), a repository of sprite data focused on the MegaMan series of games. (Disclaimer: TohnoCoding has no relation to Sprites INC. other than acknowledging their work is awesome.)
 
-This tool is designed to be part of an asset pipeline or editor — it does not read or write image files directly. It follows a simple "one job, one tool" philosophy.
+This tool is designed to be part of an asset pipeline or editor; it does not read or write image files directly. It follows a simple "one job, one tool" philosophy.
 
 If you're building a game development tool, editor or jam project in MonoGame or any other 2D-compatible platform, and need to break spritesheets into spritemaps without creating them by hand, this may be able to save you some time.
 
 You can see a sample Windows-based implementation in [this discussion](https://github.com/TohnoCoding/SpriteImageParser/discussions/1).
 
 ### TL;DR
-A small, self-contained library to detect and extract sprite regions from raster images — useful for pipelines, prototyping, or editor tools. Code samples in this README file, and in the linked discussion above.
+A small, self-contained library to detect and extract sprite regions from raster images: useful for pipelines, prototyping, or editor tools. Code samples in this README file, and in the linked discussion above.
 
 ---
 ## 🧩 Features
@@ -125,5 +125,5 @@ public class SpriteRegion {
 ```
 ---
 ## 🚫 Not Included
--   This library does not load image files — pass in a `Pixel[,]` from your own pipeline.
--   This library does not parse or deserialize formats — it only exports.
+-   This library does not load image files; pass in a `Pixel[,]` from your own pipeline.
+-   This library does not parse or deserialize formats: it only exports.
