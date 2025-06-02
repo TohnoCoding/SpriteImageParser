@@ -92,23 +92,23 @@
         {
             foreach (var row in groupedRows)
             {
-                int maxWidth = row.Max(r => r.Width);
-                int maxHeight = row.Max(r => r.Height);
+                int minY = row.Min(r => r.Y);
                 int maxBottom = row.Max(r => r.Y + r.Height);
+                int maxWidth = row.Max(r => r.Width);
+                int maxHeight = maxBottom - minY;
                 for (int i = 0; i < row.Count; i++)
                 {
                     var sprite = row[i];
-                    int newY = maxBottom - maxHeight;
-                    int yOffset = sprite.Y - newY;
-                    int xOffset = (maxWidth - sprite.Width) / 2;
-                    sprite.Y -= yOffset; // move up or down to align bottom
-                    sprite.X -= xOffset; // move left or right to center
+                    sprite.Y = minY;    // Align top to minY
+                    int xOffset = (maxWidth - sprite.Width) / 2;    // Center horizontally
+                    sprite.X -= xOffset;
                     sprite.Width = maxWidth;
                     sprite.Height = maxHeight;
-                    row[i] = sprite; // reassign the modified struct
+                    row[i] = sprite;
                 }
             }
         }
+
 
 
         /// <summary>
