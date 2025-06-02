@@ -46,11 +46,8 @@
                 }
             }
             detectedSprites = [.. detectedSprites.OrderBy(r => r.Y).ThenBy(r => r.X)];
-
             var groupedRows = GroupByRow(detectedSprites, yTolerance);
-
             NormalizeSpriteRows(groupedRows);
-
             return [.. groupedRows.SelectMany(row => row).OrderBy(r => r.Y).ThenBy(r => r.X)];
         }
 
