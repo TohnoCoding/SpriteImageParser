@@ -17,6 +17,8 @@ namespace SpriteImageParser.Core
         /// <param name="regions">The list of sprite regions to serialize.</param>
         /// <param name="frameName">The name of the frame to use in the JSON output.</param>
         /// <param name="duration">Optional; the duration for each sprite frame, if applicable.</param>
+        /// <param name="yTolerance">The variance on the Y axis in pixels to determine whether a sprite 
+        /// belongs to a group/row/action. Defaults to 3 pixels.</param>
         /// <returns>A JSON string representing the sprite regions provided.</returns>
         public static string SerializeToJson(List<SpriteRegion> regions,
             string frameName, 
@@ -25,10 +27,10 @@ namespace SpriteImageParser.Core
         {
             var output = new List<Dictionary<string, object>>();
             var grouped = Parser.GroupByRow(regions, yTolerance);
-            for (int rowIndex = 0; rowIndex < grouped.Count; rowIndex++)
+            for (int rowIndex = 0; rowIndex < grouped.Count(); rowIndex++)
             {
                 var row = grouped[rowIndex];
-                for (int spriteIndex = 0; spriteIndex < row.Count; spriteIndex++)
+                for (int spriteIndex = 0; spriteIndex < row.Count(); spriteIndex++)
                 {
                     var region = row[spriteIndex];
                     var regionData = new Dictionary<string, object>
@@ -64,6 +66,8 @@ namespace SpriteImageParser.Core
         /// <param name="regions">The list of sprite regions to serialize.</param>
         /// <param name="frameName">The name of the frame to use in the JSON output.</param>
         /// <param name="duration">Optional; the duration for each sprite frame, if applicable.</param>
+        /// <param name="yTolerance">The variance on the Y axis in pixels to determine whether a sprite 
+        /// belongs to a group/row/action. Defaults to 3 pixels.</param>
         /// <returns>An XML string representing the sprite regions provided.</returns>
         public static string SerializeToXml(
             List<SpriteRegion> regions,
